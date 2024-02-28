@@ -60,15 +60,23 @@
 </div>
 
 <style>
+  .icons {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+  }
+
   .icon-wrap {
-    display: inline-block;
-    width: 33%;
+    flex: 33% 0 0;
+    padding: 0.5rem;
   }
 
   .icon-box {
     display: block;
+    height: 100%;
     text-decoration: none;
-    margin: 0.5rem;
     padding: 0.75rem;
     border-radius: var(--pico-border-radius);
     background-color: var(--pico-card-background-color);

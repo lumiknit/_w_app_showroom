@@ -2,7 +2,17 @@
 	{
 		"name": "Google",
 		"url": "https://www.google.com",
-		"description": "구글"
+		"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+	},
+	{
+		"name": "Naver",
+		"url": "https://www.naver.com",
+		"description": "네이버"
+	},
+	{
+		"name": "Naver",
+		"url": "https://www.naver.com",
+		"description": "네이버"
 	},
 	{
 		"name": "Naver",
