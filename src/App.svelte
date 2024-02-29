@@ -80,7 +80,7 @@
     text-decoration: none;
     padding: 0.75rem;
     border-radius: var(--pico-border-radius);
-    background-color: var(--pico-card-background);
+    background-color: var(--pico-card-background-color);
     box-shadow: var(--pico-card-box-shadow);
 
     user-select: none;
