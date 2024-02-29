@@ -69,8 +69,9 @@
   }
 
   .icon-wrap {
-    flex: 33% 0 0;
+    flex: 33% 0;
     padding: 0.5rem;
+    word-break: break-all;
   }
 
   .icon-box {
@@ -79,21 +80,24 @@
     text-decoration: none;
     padding: 0.75rem;
     border-radius: var(--pico-border-radius);
-    background-color: var(--pico-card-background-color);
+    background-color: var(--pico-card-background);
+    box-shadow: var(--pico-card-box-shadow);
 
     user-select: none;
     -webkit-user-drag: none;
 
     &:hover {
+      color: var(--pico-secondary-inverse);
       background-color: var(--pico-secondary-hover);
     }
 
     &:active {
+      color: var(--pico-secondary-inverse);
       background-color: var(--pico-secondary-active);
     }
 
     & * {
-      color: var(--pico-secondary-inverse);
+      color: var(--pico-color);
     }
 
     & header {
@@ -107,6 +111,10 @@
     & img {
       width: 1.5rem;
       vertical-align: middle;
+    }
+
+    & main {
+      font-size: 0.75rem;
     }
   }
 </style>
