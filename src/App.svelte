@@ -8,12 +8,36 @@
     description: string;
   };
 
+  const columns = 3;
   let appList: App[] = [];
   let filterString = "";
 
-  $: filteredList = appList.filter((item) => {
-    return item.name.toLowerCase().includes(filterString.toLowerCase());
-  });
+  $: filteredList = (() => {
+    // create column
+    const list: Array<App[] & { height: number }>  = [];
+    for (let i = 0; i < columns; i++) {
+      const a = [] as any;
+      a.height = 0;
+      list[i] = a;
+    }
+    for (const item of appList) {
+      if (!item.name.toLowerCase().includes(filterString.toLowerCase())) {
+        continue;
+      }
+      // Find min height column
+      let min = 0;
+      for(let j = 0; j < columns; j++) {
+        if (list[j].height < list[min].height) {
+          min = j;
+        }
+      }
+      // Insert
+      const column = list[min];
+      column.push(item);
+      column.height += 10 + Math.floor(item.description.length / 10);
+    }
+    return list;
+  })();
 
   const handleGoToTop = () => {
     window.scrollTo(0, 0);
@@ -35,21 +59,27 @@
   <h1><a href="https://github.com/lumiknit">lumiknit</a>'s Apps</h1>
 
   <p>
-    Bookmarks of my custom-made web apps. <br />
+    lumiknit's web-based apps
+    (maybe useful or useless.)
+    For more information, visit <a href="https://github.com/lumiknit">@lumiknit</a>!
   </p>
 
   <input type="text" placeholder="Filter..." bind:value={filterString} />
 
   <div class="icons">
-    {#each filteredList as item}
-      <div class="icon-wrap">
-        <a href={item.url} class="icon-box">
-          <header>
-            <img src={`${item.url}/favicon.ico`} alt={item.name} />
-            <span>{item.name}</span>
-          </header>
-          <main>{item.description}</main>
-        </a>
+    {#each filteredList as column}
+      <div class="icon-column">
+        {#each column as item}
+          <div class="icon-wrap">
+            <a href={item.url} class="icon-box">
+              <header>
+                <img src={`${item.url}/favicon.ico`} alt={item.name} />
+                <span>{item.name}</span>
+              </header>
+              <main>{item.description}</main>
+            </a>
+          </div>
+        {/each}
       </div>
     {/each}
   </div>
@@ -63,14 +93,21 @@
   .icons {
     display: flex;
     flex-wrap: wrap;
-    flex-direction: row;
-    align-items: stretch;
+    flex-direction: columns;
+    align-items: start;
     justify-content: space-between;
   }
 
+  .icon-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+  }
+
   .icon-wrap {
-    flex: 33% 0;
-    padding: 0.5rem;
+    padding: 0.25rem;
     word-break: break-all;
   }
 
@@ -96,20 +133,18 @@
       background-color: var(--pico-secondary-active);
     }
 
-    & * {
-      color: var(--pico-color);
-    }
+
 
     & header {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       font-weight: bold;
-      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
     }
 
     & img {
-      width: 1.5rem;
+      width: 1rem;
       vertical-align: middle;
     }
 
