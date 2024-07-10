@@ -45,14 +45,10 @@
 
   const fetchList = async () => {
     const res = await fetch("./apps.json");
-    const data = await res.json();
-    appList = data;
-    console.log("appList", appList);
+    appList = await res.json();
   };
 
-  onMount(() => {
-    fetchList();
-  });
+  onMount(fetchList);
 </script>
 
 <div class="container">
@@ -73,7 +69,7 @@
           <div class="icon-wrap">
             <a href={item.url} class="icon-box">
               <header>
-                <img src={`${item.url}/favicon.ico`} alt={item.name} />
+                <img src={`${item.url}/favicon.ico`} alt={item.name}  onerror="this.style.display='none'"/>
                 <span>{item.name}</span>
               </header>
               <main>{item.description}</main>
@@ -85,7 +81,7 @@
   </div>
 
   <div>
-    <a href="#" on:click={handleGoToTop}> Go to Top </a>
+    <a href="#top" on:click={handleGoToTop}> Go to Top </a>
   </div>
 </div>
 
@@ -132,8 +128,6 @@
       color: var(--pico-secondary-inverse);
       background-color: var(--pico-secondary-active);
     }
-
-
 
     & header {
       display: flex;
