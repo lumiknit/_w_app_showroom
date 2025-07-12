@@ -82,7 +82,7 @@
 							<header>
 								<img
 									src={`${item.url}/favicon.ico`}
-									alt={item.name}
+									alt="📱"
 									on:error={(e) => ((e.target as HTMLImageElement).style.display = "none")}
 								/>
 								<span>{item.name}</span>

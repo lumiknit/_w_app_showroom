@@ -1,0 +1,6 @@
+@media (prefers-color-scheme: dark) {
+		:root, input {
+			--pico-background-color: #000 !important;
+			--pico-card-background-color: #111 !important;
+		}
+	}
