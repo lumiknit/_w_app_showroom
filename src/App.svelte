@@ -1,6 +1,7 @@
 <script lang="ts">
-	import "@picocss/pico";
 	import { onMount } from "svelte";
+	import Shortcut from "./Shortcut.svelte";
+	import { addMediaChangeUpdateManifestListener, updateManifest } from "./manifest.js";
 
 	type App = {
 		name: string;
@@ -8,10 +9,24 @@
 		description: string;
 	};
 
-	const columns = 3;
+	let columns = 3;
+	let screenWidth = 0;
 	let jsonError: null | string = null;
 	let appList: App[] = [];
 	let filterString = "";
+
+	// Update columns based on screen width
+	$: {
+		if (screenWidth >= 1024) {
+			columns = 4;
+		} else if (screenWidth >= 768) {
+			columns = 3;
+		} else if (screenWidth >= 480) {
+			columns = 2;
+		} else {
+			columns = 1;
+		}
+	}
 
 	$: filteredList = (() => {
 		// create column
@@ -55,7 +70,25 @@
 		}
 	};
 
-	onMount(fetchList);
+	onMount(() => {
+		fetchList();
+
+		// Update screen width on resize
+		const updateScreenWidth = () => {
+			screenWidth = window.innerWidth;
+		};
+		updateScreenWidth(); // Initial call
+		window.addEventListener('resize', updateScreenWidth);
+
+		// Initialize dynamic manifest
+		const cleanupManifest = addMediaChangeUpdateManifestListener();
+		updateManifest();
+
+		return () => {
+			window.removeEventListener('resize', updateScreenWidth);
+			cleanupManifest();
+		};
+	});
 </script>
 
 <div class="container">
@@ -70,26 +103,14 @@
 	<input type="text" placeholder="Filter..." bind:value={filterString} />
 
 	{#if jsonError !== null}
-	<p class="error">{jsonError}</p>
+		<p class="error">{jsonError}</p>
 	{/if}
 
 	<div class="icons">
 		{#each filteredList as column}
 			<div class="icon-column">
 				{#each column as item}
-					<div class="icon-wrap">
-						<a href={item.url} class="icon-box">
-							<header>
-								<img
-									src={`${item.url}/favicon.ico`}
-									alt="📱"
-									on:error={(e) => ((e.target as HTMLImageElement).style.display = "none")}
-								/>
-								<span>{item.name}</span>
-							</header>
-							<main>{item.description}</main>
-						</a>
-					</div>
+					<Shortcut app={item} />
 				{/each}
 			</div>
 		{/each}
@@ -101,10 +122,18 @@
 </div>
 
 <style>
+	.error {
+		color: #d32f2f;
+		background-color: rgba(211, 47, 47, 0.1);
+		padding: 0.5rem;
+		border-radius: var(--border-radius);
+		margin-bottom: 1rem;
+	}
+
 	.icons {
 		display: flex;
 		flex-wrap: wrap;
-		flex-direction: columns;
+		gap: 1rem;
 		align-items: start;
 		justify-content: space-between;
 	}
@@ -114,51 +143,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		justify-content: center;
-	}
-
-	.icon-wrap {
-		padding: 0.25rem;
-		word-break: break-all;
-	}
-
-	.icon-box {
-		display: block;
-		height: 100%;
-		text-decoration: none;
-		padding: 0.75rem;
-		border-radius: var(--pico-border-radius);
-		background-color: var(--pico-card-background-color);
-		box-shadow: var(--pico-card-box-shadow);
-
-		user-select: none;
-		-webkit-user-drag: none;
-
-		&:hover {
-			color: var(--pico-secondary-inverse);
-			background-color: var(--pico-secondary-hover);
-		}
-
-		&:active {
-			color: var(--pico-secondary-inverse);
-			background-color: var(--pico-secondary-active);
-		}
-
-		& header {
-			display: flex;
-			align-items: center;
-			gap: 0.5rem;
-			font-weight: bold;
-			margin-bottom: 0.5rem;
-		}
-
-		& img {
-			width: 1rem;
-			vertical-align: middle;
-		}
-
-		& main {
-			font-size: 0.75rem;
-		}
+		min-width: 120px;
 	}
 </style>
