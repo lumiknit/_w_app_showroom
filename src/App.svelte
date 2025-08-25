@@ -18,13 +18,11 @@
 	// Update columns based on screen width
 	$: {
 		if (screenWidth >= 1024) {
+			columns = 6;
+		} else if (screenWidth >= 720) {
 			columns = 4;
-		} else if (screenWidth >= 768) {
-			columns = 3;
-		} else if (screenWidth >= 480) {
-			columns = 2;
 		} else {
-			columns = 1;
+			columns = 3;
 		}
 	}
 
@@ -142,7 +140,8 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
+		justify-items: start;
 		align-items: stretch;
-		min-width: 120px;
+		min-width: 40px;
 	}
 </style>
